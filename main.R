@@ -17,5 +17,12 @@ winequality_white['quality'][winequality_white['quality'] == 5 | winequality_whi
 winequality_white['quality'][winequality_white['quality'] == 7 | winequality_white['quality'] == 8] <- 2
 
 
+#Selecionamos los datos de interes
+data_red<-winequality_red[,0:11]
+data_white<-winequality_white[,0:11]
+
+#Normalizamos datos de interes para evitar datos muy atipicos
+data_red <- as.data.frame (scale (data_red [0: 11]))
+data_white <- as.data.frame (scale (data_red [0: 11]))
 
 
