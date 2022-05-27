@@ -33,6 +33,7 @@ data_white <- as.data.frame (scale (data_white[0: 11]))
 train_red=data_red[0:1120,]
 train_white=data_white[0:3429,]
 
+
 # Apartamos los datos de testeo
 test_red=data_red[1121:1599,]
 test_white=data_white[3430:4898,]
@@ -106,3 +107,45 @@ ggplot() + geom_point(aes(x = 1:20, y = wcss_white), color = 'blue') +
   xlab('Cantidad de Centroides k') + 
   ylab('WCSS')
 
+#Usamos el la funcion kmeans
+kmeans_red <- kmeans(train_red, 3, iter.max = 1000, nstart = 20)
+kmeans_white <- kmeans(train_white, 3, iter.max = 1000, nstart = 20)
+
+labels_red=kmeans_red$cluster
+labels_white=kmeans_white$cluster
+
+# etiquetamos los datos de testeo
+#pre_red=kmeans.predict(kmeans_red,test_red)
+#pre_white=kmeans.predict(kmeans_white,test_white)
+
+#Matrices de confusion
+wqr=winequality_red$quality
+wqr=wqr[-1121:-length(wqr)]
+cfmatrix_red = confusionMatrix(as.factor(labels_red),as.factor(wqr))
+cfmatrix_red
+
+wqw=winequality_white$quality
+wqw=wqw[-3430:-length(wqw)]
+cfmatrix_white=confusionMatrix(as.factor(labels_white),as.factor(wqw))
+cfmatrix_white
+# hacemos el PCA vino rojo 
+pca.red <- prcomp(train_red,scale=FALSE)
+plot(pca.red)
+
+# hacemos PCA para blanco
+pca.white <- prcomp(train_white, scale=FALSE)
+plot(pca.white)
+
+# graficamos las dos primeras componetes de vino rojo 
+# calidad 1 color negro 
+# calidad 2 color rosado 
+#calidad 3 color verde
+plot(pca.red$x[,1],pca.red$x[,2],
+     col=labels_red,cex.axis=.7,cex.lab=.7)
+
+# Graficamos las nos primeras componetes ed vino blanco
+# calidad 1 color negro 
+# calidad 2 color rosado 
+#calidad 3 color verde
+plot(pca.white$x[,1],pca.white$x[,2],
+     col=labels_white,cex.axis=.7,cex.lab=.7)
